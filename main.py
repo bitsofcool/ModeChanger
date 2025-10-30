@@ -1,18 +1,33 @@
-from music21 import *
+import streamlit as st
+from music21 import converter, note, chord, pitch, key, tempo, environment, stream
 from mode_rules import mode_rules
+import tempfile
+import io
 
 us = environment.UserSettings()
-us['lilypondPath'] = r"C:/LilyPond/bin/lilypond.exe"
+us['lilypondPath'] = ''
+
+st.title("Mode Changer")
+st.write("Upload a MusicXML file and change its mode!")
+
 
 #Get file name
-file_name = input("What is the file called?\n")
+uploaded_file = st.file_uploader("Choose a MusicXML file", type=["mxl", "musicxml"])
+if uploaded_file:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mxl") as tmp:
+        tmp.write(uploaded_file.read())
+        tmp_path = tmp.name
 
-score = converter.parse(file_name+".mxl")
+    # --- User Input for Keys ---
+    tonic = st.text_input("Enter the MAJOR key signature (e.g., 'C', 'G', 'D', etc.):")
+    target_mode = st.text_input("Enter the mode to change to (e.g., 'Dorian', 'Mixolydian', etc.):")
 
-# What key they want/already have
-tonic = input("What is the major key signature\n")
-
-target_mode = input("What mode do you want to change to?\n")
+    # --- Load the file ---
+    try:
+        score = converter.parse(tmp_path)
+    except Exception as e:
+        st.error(f"Error loading file: {e}")
+        st.stop()
 
 
 
@@ -46,30 +61,44 @@ def change_mode(score, tonic, target_mode,):
     return score
 
 
-if __name__ == "__main__":
-    # Load the sheet music
+if st.button("Change Mode"):
+        changed = change_mode(score, tonic, target_mode)
 
+        # Add tempo mark
+        tempo_mark = tempo.MetronomeMark(number=60)
+        changed.append(tempo_mark)
 
-    # Change the mode
-    changed = change_mode(score, tonic, target_mode)
+        # Reset key signature visually
+        new_key = key.KeySignature(0)
+        for part in changed.parts:
+            first_measure = part.measure(0) or part.measure(1)
+            if first_measure:
+                first_measure.insert(0, new_key)
 
-    tempo_mark = tempo.MetronomeMark(number=60)
-    changed.append(tempo_mark)
+        # --- Create MIDI output ---
+        midi_bytes = io.BytesIO()
+        mf = changed.write("midi")
+        with open(mf, "rb") as f:
+            midi_bytes.write(f.read())
+        midi_bytes.seek(0)
 
-    new_key = key.KeySignature(0)
+        # --- Create MusicXML output ---
+        xml_bytes = io.BytesIO()
+        xml_path = changed.write("musicxml")
+        with open(xml_path, "rb") as f:
+            xml_bytes.write(f.read())
+        xml_bytes.seek(0)
 
-    for part in changed.parts:
-        # Try measure 0 first (pickup), fallback to measure 1
-        first_measure = part.measure(0)
-        if first_measure is None:
-            first_measure = part.measure(1)
-        if first_measure is not None:
-            first_measure.insert(0, new_key)
-
-
-    # Save the result as
-    #changed.write("musicxml", file_name + target_mode + "_version.mxl")
-    changed.show('lily.pdf')
-    changed.show('midi')
-    #Success Output
-    print("Enjoy!\n")
+        st.success("Mode changed successfully!")
+        st.download_button(
+            label="Download Changed MIDI",
+            data=midi_bytes,
+            file_name="changed_mode.mid",
+            mime="audio/midi"
+        )
+        st.download_button(
+            label="Download Changed MusicXML",
+            data=xml_bytes,
+            file_name="changed_mode.musicxml",
+            mime="application/vnd.recordare.musicxml+xml"
+        )
