@@ -42,16 +42,16 @@ def change_mode(score, tonic, target_mode,):
     for n in score.recurse().notes:
         #Replaces notes
         if isinstance(n, note.Note):
-            step = n.pitch.step
-            n.pitch.accidental = None
+            step = n.pitch.name
+            
             if step in rules:
                 n.pitch = pitch.Pitch(rules[step] + str(n.pitch.octave))
 
            #Replaces chords to not break!
         elif isinstance(n, chord.Chord):
             for p in n.pitches:
-                step = p.step
-                p.accidental = None
+                step = p.name
+                
                 if step in rules:
                     # Update pitch in-place
 
@@ -76,30 +76,31 @@ if st.button("Change Mode"):
                 first_measure.insert(0, new_key)
 
         # --- Create MIDI output ---
-midi_bytes = io.BytesIO()
-mf = changed.write("midi")
-with open(mf, "rb") as f:
-     midi_bytes.write(f.read())
-midi_bytes.seek(0)
+        midi_bytes = io.BytesIO()
+        mf = changed.write("midi")
+        with open(mf, "rb") as f:
+             midi_bytes.write(f.read())
+        midi_bytes.seek(0)
 
         # --- Create MusicXML output ---
-xml_bytes = io.BytesIO()
-xml_path = changed.write("musicxml")
-with open(xml_path, "rb") as f:
-    xml_bytes.write(f.read())
-xml_bytes.seek(0)
+        xml_bytes = io.BytesIO()
+        xml_path = changed.write("musicxml")
+        with open(xml_path, "rb") as f:
+            xml_bytes.write(f.read())
+        xml_bytes.seek(0)
 
-st.success("Mode changed successfully!")
-st.download_button(
-    label="Download Changed MIDI",
-    data=midi_bytes,
-    file_name="changed_mode.mid",
-    mime="audio/midi"
-)
-st.download_button(
-    label="Download Changed MusicXML",
-    data=xml_bytes,
-    file_name="changed_mode.musicxml",
-    mime="application/vnd.recordare.musicxml+xml"
-)
+        st.success("Mode changed successfully!")
+        st.download_button(
+            label="Download Changed MIDI",
+            data=midi_bytes,
+            file_name="changed_mode.mid",
+            mime="audio/midi"
+        )
+        st.download_button(
+            label="Download Changed MusicXML",
+            data=xml_bytes,
+            file_name="changed_mode.musicxml",
+            mime="application/vnd.recordare.musicxml+xml"
+        )
+
 
