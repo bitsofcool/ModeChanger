@@ -144,14 +144,15 @@ mode_rules = {
             "Locrian": {"C": "Cb", "D": "Db", "E#": "E", "F": "Fb", "G": "Gb", "A": "Ab"},
         },
         "B": {
-            "Ionian": {"E": "Eb", "F": "Fb", "G": "Gb", "Abb": "Ab", "Bbb": "Bb", "Cb": "C"},
-            "Dorian": {},
-            "Phrygian": {},
-            "Lydian": {},
-            "Mixolydian": {},
-            "Aeolian": {},
-            "Locrian": {},
+            "Ionian": {"C": "C#", "D": "D#", "E#": "E", "F": "F#", "G": "G#", "A": "A#"},
+            "Dorian": {"C": "C#", "D": "D#", "E": "E#", "F": "F#", "G": "G#", "A#": "A"},
+            "Phrygian": {"C#": "C", "D#": "D", "E#": "E", "F": "F#", "G#": "G", "A": "A#"},
+            "Lydian": {"C": "C#", "D": "D#", "E#": "E", "F": "F#", "G": "G#", "A": "A#"},
+            "Mixolydian": {"C": "C#", "D": "D#", "E#": "E", "F": "F#", "G": "G#", "A": "A#"},
+            "Aeolian": {"C": "C#", "D": "D#", "E#": "E", "F": "F#", "G": "G#", "A": "A#"},
+            "Locrian": {"C": "C#", "D": "D#", "E#": "E", "F": "F#", "G": "G#", "A": "A#"},
         },
+
 
 
     }
