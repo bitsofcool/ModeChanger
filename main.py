@@ -76,29 +76,30 @@ if st.button("Change Mode"):
                 first_measure.insert(0, new_key)
 
         # --- Create MIDI output ---
-        midi_bytes = io.BytesIO()
-        mf = changed.write("midi")
-        with open(mf, "rb") as f:
-            midi_bytes.write(f.read())
-        midi_bytes.seek(0)
+midi_bytes = io.BytesIO()
+mf = changed.write("midi")
+with open(mf, "rb") as f:
+     midi_bytes.write(f.read())
+midi_bytes.seek(0)
 
         # --- Create MusicXML output ---
-        xml_bytes = io.BytesIO()
-        xml_path = changed.write("musicxml")
-        with open(xml_path, "rb") as f:
-            xml_bytes.write(f.read())
-        xml_bytes.seek(0)
+xml_bytes = io.BytesIO()
+xml_path = changed.write("musicxml")
+with open(xml_path, "rb") as f:
+    xml_bytes.write(f.read())
+xml_bytes.seek(0)
 
-        st.success("Mode changed successfully!")
-        st.download_button(
-            label="Download Changed MIDI",
-            data=midi_bytes,
-            file_name="changed_mode.mid",
-            mime="audio/midi"
-        )
-        st.download_button(
-            label="Download Changed MusicXML",
-            data=xml_bytes,
-            file_name="changed_mode.musicxml",
-            mime="application/vnd.recordare.musicxml+xml"
-        )
+st.success("Mode changed successfully!")
+st.download_button(
+    label="Download Changed MIDI",
+    data=midi_bytes,
+    file_name="changed_mode.mid",
+    mime="audio/midi"
+)
+st.download_button(
+    label="Download Changed MusicXML",
+    data=xml_bytes,
+    file_name="changed_mode.musicxml",
+    mime="application/vnd.recordare.musicxml+xml"
+)
+
