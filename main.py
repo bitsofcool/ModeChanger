@@ -18,11 +18,11 @@ if uploaded_file:
         tmp.write(uploaded_file.read())
         tmp_path = tmp.name
 
-    # --- User Input for Keys ---
+    #User Input for Keys
     tonic = st.text_input("Enter the MAJOR key signature (e.g., 'C', 'G', 'D', etc.):")
     target_mode = st.text_input("Enter the mode to change to (e.g., 'Dorian', 'Mixolydian', etc.):")
 
-    # --- Load the file ---
+    #Load the file
     try:
         score = converter.parse(tmp_path)
     except Exception as e:
@@ -75,14 +75,14 @@ if st.button("Change Mode"):
             if first_measure:
                 first_measure.insert(0, new_key)
 
-        # --- Create MIDI output ---
+        #Create MIDI output
         midi_bytes = io.BytesIO()
         mf = changed.write("midi")
         with open(mf, "rb") as f:
              midi_bytes.write(f.read())
         midi_bytes.seek(0)
 
-        # --- Create MusicXML output ---
+        #Create MusicXML output
         xml_bytes = io.BytesIO()
         xml_path = changed.write("musicxml")
         with open(xml_path, "rb") as f:
@@ -93,14 +93,15 @@ if st.button("Change Mode"):
         st.download_button(
             label="Download Changed MIDI",
             data=midi_bytes,
-            file_name="changed_mode.mid",
+            file_name= target_mode + " " + uploaded_file + ".midi",
             mime="audio/midi"
         )
         st.download_button(
             label="Download Changed MusicXML",
             data=xml_bytes,
-            file_name="changed_mode.musicxml",
+            file_name= target_mode + " " + uploaded_file + ".musicxml",
             mime="application/vnd.recordare.musicxml+xml"
         )
+
 
 
