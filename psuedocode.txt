@@ -1,0 +1,30 @@
+Import Needed Addons
+
+Uploaded_File = Users_Imported_File
+Selected_Tonic = User_Input
+Target_mode = User_Input
+
+
+change_mode(){
+  for(notes in Uploaded_File){
+    if is a Note{
+    Change accidental to match the mode
+    }
+    if is a Chord{
+    Change accidentals to match the mode
+    }
+}}
+if("Change Mode" button is clicked){
+run change_mode with user inputs
+set Key signature
+Write all markings in score
+}
+
+if(MIDI button pressed){
+create a midi file and export it
+}
+
+if(Sheet Music pressed){
+create a sheet music file and export it
+}
+
