@@ -93,15 +93,16 @@ if st.button("Change Mode"):
         st.download_button(
             label="Download Changed MIDI",
             data=midi_bytes,
-            file_name= target_mode + " " + uploaded_file + ".midi",
+            file_name= target_mode + " " + uploaded_file.name + ".midi",
             mime="audio/midi"
         )
         st.download_button(
             label="Download Changed MusicXML",
             data=xml_bytes,
-            file_name= target_mode + " " + uploaded_file + ".musicxml",
+            file_name= target_mode + " " + uploaded_file.name + ".musicxml",
             mime="application/vnd.recordare.musicxml+xml"
         )
+
 
 
 
